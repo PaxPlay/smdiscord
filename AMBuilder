@@ -1,0 +1,44 @@
+# vim: set sts=2 ts=8 sw=2 tw=99 et ft=python:
+import os, sys
+
+#mbedtls = builder.RunScript(os.path.join('deps', 'MbedTLSBuilder'))
+#zlib = builder.RunScript(os.path.join('deps', 'zlibBuilder'))
+#curl = builder.RunScript(os.path.join('deps', 'cURLBuilder'))
+
+projectName = 'discord'
+
+binary = Extension.Library(builder, projectName + '.ext')
+
+sources = [
+  'extension.cpp',
+  'DiscordBot.cpp',
+  'RequestThread.cpp',
+  os.path.join('discordObjects', 'User.cpp'),
+  os.path.join('natives', 'natives_DiscordBot.cpp'),
+  os.path.join('http', 'http.cpp'),
+]
+
+for source in sources:
+    binary.sources += [os.path.join('src', source),]
+
+binary.sources += [os.path.join(Extension.sm_root, 'public', 'smsdk_ext.cpp'),]
+
+binary.compiler.includes += [
+  os.path.join(builder.sourcePath, 'src'),
+  os.path.join(builder.sourcePath, 'deps'),
+  os.path.join(builder.sourcePath, 'deps', 'include'),
+]
+
+binary.compiler.defines += [
+  'CURL_STATICLIB'
+]
+
+binary.compiler.postlink += [
+  '-L../../deps/lib',
+  '-lcurl',
+  '-lz',
+  '-lssl',
+  '-lcrypto',
+]
+
+Extension.extensions.append(builder.Add(binary))

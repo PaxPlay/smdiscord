@@ -1,0 +1,6 @@
+[submodule "deps/rapidjson"]
+	path = deps/rapidjson
+	url = https://github.com/Tencent/rapidjson.git
+[submodule "deps/string"]
+	path = deps/string
+	url = https://github.com/paxplay/string.git
